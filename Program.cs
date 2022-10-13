@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Proyecto_Quiniela.Context;
+using ProyectoQuiniela.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,13 +9,19 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<ConexionSQLServer>(options =>
+
+builder.Services.AddDbContext<QuinielaContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("Cadena"));
 });
 
-var app = builder.Build();
+//Serializacion de los controladores con Json 
+builder.Services.AddControllers().AddJsonOptions(option =>
+{
+    option.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+});
 
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
